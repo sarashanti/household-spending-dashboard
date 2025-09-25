@@ -11,133 +11,134 @@ df = pd.read_excel('lifetime_spending.xlsx')
 df.drop(['Unnamed: 0', 'MonthYear', 'Date', 'ZAP', 'Note'], axis=1, inplace=True)
 df.tail()
 
-#Initialize Dash app
+#initialize dash app
 app = JupyterDash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-  color_map_pc = {
-     'Bills & Utilities': 'khaki',
-     'Education': 'lightblue',
-     'Entertainment': 'lightcoral',
-     'Fees & Charges': 'lightseagreen',
-     'Food': 'lightsalmon',
-     'Gifts & Donations': 'mediumaquamarine',
-     'Health & Fitness': 'navajowhite',
-     'Household': 'peachpuff',
-     'Income': 'plum',
-     'Loan': 'darkseagreen',
-     'Parents': 'lavender',
-     'Saving & Investment': 'lemonchiffon',
-     'Savings': 'lightcyan',
-     'Shopping': 'palevioletred',
-     'Transportation': 'rosybrown',
-     'Travel': 'thistle'
+#assigning colors to category and parent category
+color_map_pc = {
+     'Bills & Utilities': '#E48F72',
+     'Education': '#FC6955',
+     'Entertainment': '#6A76FC',
+     'Fees & Charges': '#FED4C4',
+     'Food': '#86CE00',
+     'Gifts & Donations': '#BC7196',
+     'Health & Fitness': '#F6F926',
+     'Household': '#FF9616',
+     'Income': '#479B55',
+     'Loan': '#EEA6FB',
+     'Parents': '#DC587D',
+     'Saving & Investment': '#D626FF',
+     'Savings': '#6E899C',
+     'Shopping': '#00B5F7',
+     'Transportation': '#E3EE9E',
+     'Travel': '#C9FBE5'
 }
 
 color_map_c = {
-        'Electricity Bill': 'khaki',
-        'Gas Bill': 'khaki',
-        'Internet Bill': 'khaki',
-        'Laundry': 'khaki',
-        'Security': 'khaki',
-        'Phone Bill': 'khaki',
-        'Rentals': 'khaki',
-        'Trash Bill': 'khaki',
-        'Water Bill': 'khaki',
-        'Insurances': 'khaki',
-        'Other Utility Bills': 'khaki',
-        'Course': 'lightblue',
-        'Books': 'lightblue',
-        'Online Course': 'lightblue',
-        'Education': 'lightblue',
-        'Working Space' : 'lightblue',
-        'Entry Tickets': 'lightcoral',
-        'Games': 'lightcoral',
-        'Movies': 'lightcoral',
-        'Subscription': 'lightcoral',
-        'Streaming Service': 'lightcoral',
-        'Entertainment': 'lightcoral',
-        'Playing': 'lightcoral',
-        'Concert': 'lightcoral',
-        'Administration': 'peachpuff',
-        'Cleaning Products': 'peachpuff',
-        'Home Essentials': 'peachpuff',
-        'Kitchen': 'peachpuff',
-        'Pets': 'peachpuff',
-        'Repairing': 'peachpuff',
-        'Home Services': 'peachpuff',
-        'Fees & Charges': 'lightseagreen',
-        'OVO': 'lightseagreen',
-        'GoPay': 'lightseagreen',
-        'Bank': 'lightseagreen',
-        'GoFood': 'lightsalmon',
-        'Grab Food': 'lightsalmon',
-        'Groceries': 'lightsalmon',
-        'Food': 'lightsalmon',
-        'Jajan': 'lightsalmon',
-        'Jamuan': 'lightsalmon',
-        'Males Masak': 'lightsalmon',
-        'Pre Order': 'lightsalmon',
-        'Restaurants': 'lightsalmon',
-        'Café': 'lightsalmon',
-        'Makan Berat': 'lightsalmon',
-        'Angpao': 'mediumaquamarine',
-        'Charity': 'mediumaquamarine',
-        'Friends & Lover': 'mediumaquamarine',
-        'Funeral': 'mediumaquamarine',
-        'Marriage': 'mediumaquamarine',
-        'Zakat & Kurban': 'mediumaquamarine',
-        'Gifts & Donations': 'mediumaquamarine',
-        'Doctor': 'navajowhite',
-        'Fitness': 'navajowhite',
-        'Lab': 'navajowhite',
-        'Medical Check-up': 'navajowhite',
-        'Personal Care': 'navajowhite',
-        'Pharmacy': 'navajowhite',
-        'Sports': 'navajowhite',
-        'Health & Fitness': 'navajowhite',
-        'Treatment': 'navajowhite',
-        'Parents': 'lavender',
-        'Accessories': 'palevioletred',
-        'Children & Babies': 'palevioletred',
-        'Electronics': 'palevioletred',
-        'Makeup': 'palevioletred',
-        'Personal Items': 'palevioletred',
-        'Stationary': 'palevioletred',
-        'Shopping': 'palevioletred',
-        'Furniture': 'palevioletred',
-        'Fashion': 'palevioletred',
-        'Angkot': 'rosybrown',
-        'Bus': 'rosybrown',
-        'Gojek': 'rosybrown',
-        'Grab Bike': 'rosybrown',
-        'Ojek': 'rosybrown',
-        'Paket': 'rosybrown',
-        'Parking Fees': 'rosybrown',
-        'Petrol': 'rosybrown',
-        'Saving' : 'lemonchiffon',
-        'Investment' : 'lemonchiffon',
-        'Saving & Investment': 'lemonchiffon',
-        'Taxi': 'rosybrown',
-        'Tol': 'rosybrown',
-        'Train': 'rosybrown',
-        'TransJakarta': 'rosybrown',
-        'Travel Car': 'rosybrown',
-        'Vehicle Maintenance': 'rosybrown',
-        'Transportation': 'rosybrown',
-        'Airplane' : 'rosybrown',
-        'Hotel': 'thistle',
-        'Oleh - Oleh': 'thistle',
-        'Collect Savings': 'plum',
-        'Salary': 'plum',
-        'Gifts': 'plum',
-        'Selling': 'plum',
-        'Loan' : 'darkseagreen'
+        'Electricity Bill': '#E48F72',
+        'Gas Bill': '#E48F72',
+        'Internet Bill': '#E48F72',
+        'Laundry': '#E48F72',
+        'Security': '#E48F72',
+        'Phone Bill': '#E48F72',
+        'Rentals': '#E48F72',
+        'Trash Bill': '#E48F72',
+        'Water Bill': '#E48F72',
+        'Insurances': '#E48F72',
+        'Other Utility Bills': '#E48F72',
+        'Course': '#FC6955',
+        'Books': '#FC6955',
+        'Online Course': '#FC6955',
+        'Education': '#FC6955',
+        'Working Space' : '#FC6955',
+        'Entry Tickets': '#6A76FC',
+        'Games': '#6A76FC',
+        'Movies': '#6A76FC',
+        'Subscription': '#6A76FC',
+        'Streaming Service': '#6A76FC',
+        'Entertainment': '#6A76FC',
+        'Playing': '#6A76FC',
+        'Concert': '#6A76FC',
+        'Administration': '#FF9616',
+        'Cleaning Products': '#FF9616',
+        'Home Essentials': '#FF9616',
+        'Kitchen': '#FF9616',
+        'Pets': '#FF9616',
+        'Repairing': '#FF9616',
+        'Home Services': '#FF9616',
+        'Fees & Charges': '#FED4C4',
+        'OVO': '#FED4C4',
+        'GoPay': '#FED4C4',
+        'Bank': '#FED4C4',
+        'GoFood': '#86CE00',
+        'Grab Food': '#86CE00',
+        'Groceries': '#86CE00',
+        'Food': '#86CE00',
+        'Jajan': '#86CE00',
+        'Jamuan': '#86CE00',
+        'Males Masak': '#86CE00',
+        'Pre Order': '#86CE00',
+        'Restaurants': '#86CE00',
+        'Café': '#86CE00',
+        'Makan Berat': '#86CE00',
+        'Angpao': '#BC7196',
+        'Charity': '#BC7196',
+        'Friends & Lover': '#BC7196',
+        'Funeral': '#BC7196',
+        'Marriage': '#BC7196',
+        'Zakat & Kurban': '#BC7196',
+        'Gifts & Donations': '#BC7196',
+        'Doctor': '#F6F926',
+        'Fitness': '#F6F926',
+        'Lab': '#F6F926',
+        'Medical Check-up': '#F6F926',
+        'Personal Care': '#F6F926',
+        'Pharmacy': '#F6F926',
+        'Sports': '#F6F926',
+        'Health & Fitness': '#F6F926',
+        'Treatment': '#F6F926',
+        'Parents': '#DC587D',
+        'Accessories': '#00B5F7',
+        'Children & Babies': '#00B5F7',
+        'Electronics': '#00B5F7',
+        'Makeup': '#00B5F7',
+        'Personal Items': '#00B5F7',
+        'Stationary': '#00B5F7',
+        'Shopping': '#00B5F7',
+        'Furniture': '#00B5F7',
+        'Fashion': '#00B5F7',
+        'Angkot': '#E3EE9E',
+        'Bus': '#E3EE9E',
+        'Gojek': '#E3EE9E',
+        'Grab Bike': '#E3EE9E',
+        'Ojek': '#E3EE9E',
+        'Paket': '#E3EE9E',
+        'Parking Fees': '#E3EE9E',
+        'Petrol': '#E3EE9E',
+        'Saving' : '#D626FF',
+        'Investment' : '#D626FF',
+        'Saving & Investment': '#D626FF',
+        'Taxi': '#E3EE9E',
+        'Tol': '#E3EE9E',
+        'Train': '#E3EE9E',
+        'TransJakarta': '#E3EE9E',
+        'Travel Car': '#E3EE9E',
+        'Vehicle Maintenance': '#E3EE9E',
+        'Transportation': '#E3EE9E',
+        'Airplane' : '#E3EE9E',
+        'Hotel': '#C9FBE5',
+        'Oleh - Oleh': '#C9FBE5',
+        'Collect Savings': '#479B55',
+        'Salary': '#479B55',
+        'Gifts': '#479B55',
+        'Selling': '#479B55',
+        'Loan' : '#EEA6FB'
     }
 
   app.layout = dbc.Container([
     dcc.Store(id="app_state", data={"last_month": None, "last_year": None}),
     
-    # Title
+  #dashboard title
     dbc.Row([
         dbc.Col(
             html.H1(
@@ -154,7 +155,7 @@ color_map_c = {
         )
     ]),
 
-    # Filters Card
+    #filter bar
     dbc.Card(
         dbc.CardBody([
             dbc.Row([
@@ -218,7 +219,7 @@ color_map_c = {
         ]), className="pt-1 pb-1"
     ),
 
-    # Trend Graphs Card
+    #trend graphs card
     dbc.Card(
         dbc.CardBody([
             dbc.Row([
@@ -235,7 +236,7 @@ color_map_c = {
         className="gy-0 mb-4"
     ),
 
-    # Tree Graph Card
+    #tree map card
     dbc.Card(
         dbc.CardBody([
             dbc.Row([
@@ -248,7 +249,7 @@ color_map_c = {
         className="gy-0 mb-4"
     ),
 
-    # Bar + Trend3 Card
+    #bar and trendline card
     dbc.Card(
         dbc.CardBody([
             dbc.Row([
@@ -303,36 +304,46 @@ def update_graphs1(transaction_type, year, month, account, parent_category):
 
     df_trend1 = filtered_df.groupby(['Year','Month'])['Amount'].sum().reset_index()
     df_trend1 = df_trend1.groupby(['Year'])['Amount'].median().reset_index()
-    
-    df_trend2 = filtered_df.groupby(['Year','Month','MonthName'])['Amount'].sum().reset_index()
+    df_trend1['Lag_Value'] = df_trend1['Amount'].shift(1)
+    df_trend1['Diff'] = round(((df_trend1['Amount']/df_trend1['Lag_Value'])-1)*100,1).fillna(0)
 
     #define line chart
-    fig_trend1 = px.line(df_trend1, x="Year", y="Amount", title = "Average Monthly Expenses Year Over Year", markers=True)
-    fig_trend1.update_traces(mode="markers+lines", hovertemplate="Rp %{y:,.0f}")
-    fig_trend1.update_layout(hovermode="x unified", 
-                             plot_bgcolor="rgba(0,0,0,0)",
-                             margin=dict(l=40, r=40, t=60, b=60),
-                             xaxis_title=None,
-                             yaxis_title=None,
-                             title_x=0.5,
-                             font=dict(
+    fig_trend1 = px.line(df_trend1
+                         , x="Year"
+                         , y="Amount"
+                         , custom_data= ['Diff']
+                         , title = "Average Monthly Expenses Year Over Year"
+                         , markers=True)
+    fig_trend1.update_traces(mode="markers+lines"
+                             , hovertemplate="Rp %{y:,.0f} (%{customdata[0]:+.1f}%)<extra></extra>")
+    fig_trend1.update_layout(hovermode="x unified"
+                             , plot_bgcolor="rgba(0,0,0,0)"
+                             , margin=dict(l=40, r=40, t=60, b=60)
+                             , xaxis_title=None
+                             , yaxis_title=None
+                             , title_x=0.5
+                             , font=dict(
                                         family="Verdana",   
                                         size=12,          
-                                        color="black"     
-                                    )
-                            )
-    fig_trend1.update_xaxes(type="category",showline=True, linewidth=1, linecolor="black", mirror=False)
+                                        color="black"))
+    fig_trend1.update_xaxes(type="category"
+                            , showline=True
+                            , linewidth=1
+                            , linecolor="black"
+                            , mirror=False)
     fig_trend1.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=False)
 
-    # Format title based on parent_category selection
+    #format title based on parent_category selection
     if set(parent_category) == set(df['ParentCategory'].unique()):
         title_text = "Monthly Breakdown on All Expenses"
     elif set(parent_category) == set([cat for cat in df['ParentCategory'].unique() if cat != "Saving & Investment"]):
         title_text = "Monthly Breakdown on All Expenses (exclude Saving & Investment)"
     else:
         title_text = "Monthly Breakdown on " + ", ".join(parent_category)
+
+    df_trend2 = filtered_df.groupby(['Year','Month','MonthName'])['Amount'].sum().reset_index()
     
-    fig_trend2 = px.line(df_trend2, x="MonthName", y="Amount", color="Year", title= title_text, markers=True, color_discrete_sequence=px.colors.qualitative.Dark2)
+    fig_trend2 = px.line(df_trend2, x="MonthName", y="Amount", color="Year", title= title_text, markers=True)
     fig_trend2.update_traces(mode="markers+lines", hovertemplate="Rp %{y:,.0f}")
     fig_trend2.update_layout(hovermode="x unified", 
                              plot_bgcolor="rgba(0,0,0,0)",
@@ -348,7 +359,6 @@ def update_graphs1(transaction_type, year, month, account, parent_category):
                             )
     fig_trend2.update_xaxes(showline=True, linewidth=1, linecolor="black", mirror=False)
     fig_trend2.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=False)
-
     return fig_trend1, fig_trend2
 
 @app.callback(
@@ -447,8 +457,7 @@ def update_treemap(clickData, hoverData, transaction_type, year, month, account,
 
     app_state["last_month"] = latest_month
     app_state["last_year"] = latest_year
-
-
+  
     return fig_tree1, app_state
 
 @app.callback(
@@ -592,17 +601,20 @@ def update_graphs3(hoverData, transaction_type, year, month, account, parent_cat
         breakdown_df = filtered_df
 
     df_trend3 = breakdown_df.groupby(['Year','Category'])['Amount'].sum().reset_index()
+    df_trend3['Lag_Value'] = df_trend3['Amount'].shift(1)
+    df_trend3['Diff'] = round(((df_trend3['Amount']/df_trend3['Lag_Value'])-1)*100,1).fillna(0)
     
     fig_trend3 = px.line(df_trend3
                          , x="Year"
                          , y="Amount"
+                         , custom_data = ['Diff']
                          , color="Category"
                          , color_discrete_map = color_map_c
                          , title = f"Year-On-Year Expenses on {hovered_category}" if hovered_category else "Year-On-Year Expenses on All Categories"
                          , markers=True
                         )
     fig_trend3.update_traces(mode="markers+lines"
-                             , hovertemplate="Rp %{y:,.0f}<extra></extra>")
+                             , hovertemplate="Rp %{y:,.0f} (%{customdata[0]:+.1f}%)<extra></extra>")
     fig_trend3.update_layout(hovermode="x unified"
                              , plot_bgcolor="rgba(0,0,0,0)"
                              , margin=dict(l=40, r=40, t=60, b=40)
