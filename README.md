@@ -1,18 +1,18 @@
-# Household Spending Dashboard
+## Household Spending Dashboard
 
-## Overview
+### Overview
 Household Spending Dashboard is a personalized spending visualization that utilizes extracted data from Money Lover. Money Lover is an app that allows you to track daily spending and its data can be exported in `.csv` format. The raw data is further processed using Python and Plotly Dash to create a Tableau-like dashboard.
 
-## Project Snapshots
+### Project Snapshots
 
-## Why Did I Make This Dashboard?
+### Why Did I Make This Dashboard?
 
-## Tech Stack
+### Tech Stack
 
-## User Guide
+### User Guide
 
-## About Each File
+### About Each File
 
-### `cleaning-moneylover-data.py`
+#### `cleaning-moneylover-data.py`
 
-### `visualization.py`
+#### `visualization.py`
