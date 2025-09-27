@@ -135,11 +135,12 @@ color_map_c = {
         'Selling': '#479B55',
         'Loan' : '#EEA6FB'
     }
+
 #-----------------layouting--------------------
   app.layout = dbc.Container([
     dcc.Store(id="app_state", data={"last_month": None, "last_year": None}),
     
-    # title card----------------------
+    #title card----------------------
     dbc.Row([
         dbc.Col(
             html.H1(
@@ -156,7 +157,7 @@ color_map_c = {
         )
     ]),
 
-    # filter bar card------------------
+    #filter bar card------------------
     dbc.Card(
         dbc.CardBody([
             dbc.Row([
@@ -220,7 +221,7 @@ color_map_c = {
         ]), className="pt-1 pb-1"
     ),
 
-    # linechart card----------------------
+    #linechart card----------------------
     dbc.Card(
         dbc.CardBody([
             dbc.Row([
@@ -237,7 +238,7 @@ color_map_c = {
         className="gy-0 mb-4"
     ),
 
-    # treemap card----------------------
+    #treemap card----------------------
     dbc.Card(
         dbc.CardBody([
             dbc.Row([
@@ -250,7 +251,7 @@ color_map_c = {
         className="gy-0 mb-4"
     ),
 
-    # bar and linechart card--------------
+    #bar and linechart card--------------
     dbc.Card(
         dbc.CardBody([
             dbc.Row([
@@ -366,6 +367,7 @@ def update_graphs1(transaction_type, year, month, account, parent_category):
     fig_trend2.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=False)
     return fig_trend1, fig_trend2
 
+
 #-----------------treemap--------------------
 @app.callback(
     Output('spending-tree1','figure'),
@@ -382,6 +384,7 @@ def update_graphs1(transaction_type, year, month, account, parent_category):
     )
 
 def update_treemap(clickData, hoverData, transaction_type, year, month, account, parent_category,app_state):
+     
     #filtering--------------------------------------
     year_filter = df['Year'].unique() if 'all' in year else year
     month_filter = df['MonthName'].unique() if 'all' in month else month
@@ -436,7 +439,7 @@ def update_treemap(clickData, hoverData, transaction_type, year, month, account,
     else:
         parent_category
 
-    #final filter-----------------------
+    #final filter----------------------------
     filtered_df = df[
         (df['TransactionType'].isin(transaction_type)) &
         (df['Year'].isin(year_filter)) &
@@ -464,7 +467,6 @@ def update_treemap(clickData, hoverData, transaction_type, year, month, account,
 
     app_state["last_month"] = latest_month
     app_state["last_year"] = latest_year
-  
     return fig_tree1, app_state
 
 #-----------------barchart----------------------
@@ -481,6 +483,7 @@ def update_treemap(clickData, hoverData, transaction_type, year, month, account,
     )
 
 def update_graphs2(clickData, hoverData, tree_hover, transaction_type, year, month, account, parent_category):
+     
     #filtering-------------------------------------- 
     year_filter = df['Year'].unique() if 'all' in year else year
     month_filter = df['MonthName'].unique() if 'all' in month else month
@@ -554,16 +557,12 @@ def update_graphs2(clickData, hoverData, tree_hover, transaction_type, year, mon
                            xaxis=dict(visible=False),
                            xaxis_title=None,
                            yaxis_title=None,
-                           font=dict(
-                                    family="Verdana",   
-                                    size=12,          
-                                    color="black"     
-                                    )
+                           font=dict(family="Verdana",size=12,color="black")
                           )
     fig_bar1.update_xaxes(showline=True, linewidth=1, linecolor="black", mirror=False)
     fig_bar1.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=False)
-
     return fig_bar1
+
 
 #-----------------last linechart----------------------
 @app.callback(
@@ -577,6 +576,7 @@ def update_graphs2(clickData, hoverData, tree_hover, transaction_type, year, mon
     )
 
 def update_graphs3(hoverData, transaction_type, year, month, account, parent_category):
+     
     #filtering-------------------------------------- 
     year = df['Year'].unique() if 'all' in year else year
     month = df['MonthName'].unique() if 'all' in month else month
@@ -637,15 +637,10 @@ def update_graphs3(hoverData, transaction_type, year, month, account, parent_cat
                              , xaxis_title=None
                              , yaxis_title=None
                              , title_x=0.5
-                             , font=dict(
-                                        family="Verdana",   
-                                        size=12,          
-                                        color="black"     
-                                    )
+                             , font=dict(family="Verdana",size=12,color="black")
                             )
     fig_trend3.update_xaxes(type="category",showline=True, linewidth=1, linecolor="black", mirror=False)                           
     fig_trend3.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=False)
-        
     return fig_trend3
 
 
