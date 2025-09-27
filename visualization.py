@@ -7,14 +7,15 @@ import time
 from dash import ctx, dcc, html, Input, Output, State
 from jupyter_dash import JupyterDash
 
+#-----------------reading files----------------------
 df = pd.read_excel('lifetime_spending.xlsx')
 df.drop(['Unnamed: 0', 'MonthYear', 'Date', 'ZAP', 'Note'], axis=1, inplace=True)
 df.tail()
 
-#initialize dash app
+#---------------initialize dash app------------------
 app = JupyterDash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-#assigning colors to category and parent category
+#----------------assigning colors--------------------
 color_map_pc = {
      'Bills & Utilities': '#E48F72',
      'Education': '#FC6955',
@@ -134,11 +135,11 @@ color_map_c = {
         'Selling': '#479B55',
         'Loan' : '#EEA6FB'
     }
-
+#-----------------layouting--------------------
   app.layout = dbc.Container([
     dcc.Store(id="app_state", data={"last_month": None, "last_year": None}),
     
-  #dashboard title
+    # title card----------------------
     dbc.Row([
         dbc.Col(
             html.H1(
@@ -155,7 +156,7 @@ color_map_c = {
         )
     ]),
 
-    #filter bar
+    # filter bar card------------------
     dbc.Card(
         dbc.CardBody([
             dbc.Row([
@@ -219,7 +220,7 @@ color_map_c = {
         ]), className="pt-1 pb-1"
     ),
 
-    #trend graphs card
+    # linechart card----------------------
     dbc.Card(
         dbc.CardBody([
             dbc.Row([
@@ -236,7 +237,7 @@ color_map_c = {
         className="gy-0 mb-4"
     ),
 
-    #tree map card
+    # treemap card----------------------
     dbc.Card(
         dbc.CardBody([
             dbc.Row([
@@ -249,7 +250,7 @@ color_map_c = {
         className="gy-0 mb-4"
     ),
 
-    #bar and trendline card
+    # bar and linechart card--------------
     dbc.Card(
         dbc.CardBody([
             dbc.Row([
@@ -266,6 +267,7 @@ color_map_c = {
     )
 ], fluid=True)
 
+#-----------------first two linecharts--------------------
 @app.callback(
     Output('spending-trend1','figure'),
     Output('spending-trend2','figure'),
@@ -277,6 +279,7 @@ color_map_c = {
     )
 
 def update_graphs1(transaction_type, year, month, account, parent_category):
+    #filtering-------------------------------------- 
     year = df['Year'].unique() if 'all' in year else year
     month = df['MonthName'].unique() if 'all' in month else month
 
@@ -301,13 +304,13 @@ def update_graphs1(transaction_type, year, month, account, parent_category):
         (df['Account'].isin(account)) &
         (df['ParentCategory'].isin(parent_category)) 
         ]
-
+    #tabble aggregation----------------------
     df_trend1 = filtered_df.groupby(['Year','Month'])['Amount'].sum().reset_index()
     df_trend1 = df_trend1.groupby(['Year'])['Amount'].median().reset_index()
     df_trend1['Lag_Value'] = df_trend1['Amount'].shift(1)
     df_trend1['Diff'] = round(((df_trend1['Amount']/df_trend1['Lag_Value'])-1)*100,1).fillna(0)
 
-    #define line chart
+    #define line chart-----------------------
     fig_trend1 = px.line(df_trend1
                          , x="Year"
                          , y="Amount"
@@ -333,7 +336,7 @@ def update_graphs1(transaction_type, year, month, account, parent_category):
                             , mirror=False)
     fig_trend1.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=False)
 
-    #format title based on parent_category selection
+    #format title based on parent_category selection-----------------------
     if set(parent_category) == set(df['ParentCategory'].unique()):
         title_text = "Monthly Breakdown on All Expenses"
     elif set(parent_category) == set([cat for cat in df['ParentCategory'].unique() if cat != "Saving & Investment"]):
@@ -341,8 +344,10 @@ def update_graphs1(transaction_type, year, month, account, parent_category):
     else:
         title_text = "Monthly Breakdown on " + ", ".join(parent_category)
 
+    #tabble aggregation---------------------- 
     df_trend2 = filtered_df.groupby(['Year','Month','MonthName'])['Amount'].sum().reset_index()
-    
+
+    #define line chart----------------------- 
     fig_trend2 = px.line(df_trend2, x="MonthName", y="Amount", color="Year", title= title_text, markers=True)
     fig_trend2.update_traces(mode="markers+lines", hovertemplate="Rp %{y:,.0f}")
     fig_trend2.update_layout(hovermode="x unified", 
@@ -361,6 +366,7 @@ def update_graphs1(transaction_type, year, month, account, parent_category):
     fig_trend2.update_yaxes(showline=True, linewidth=1, linecolor="black", mirror=False)
     return fig_trend1, fig_trend2
 
+#-----------------treemap--------------------
 @app.callback(
     Output('spending-tree1','figure'),
     Output('app_state','data'),
@@ -376,17 +382,18 @@ def update_graphs1(transaction_type, year, month, account, parent_category):
     )
 
 def update_treemap(clickData, hoverData, transaction_type, year, month, account, parent_category,app_state):
+    #filtering--------------------------------------
     year_filter = df['Year'].unique() if 'all' in year else year
     month_filter = df['MonthName'].unique() if 'all' in month else month
 
     if app_state is None:
         app_state = {"last_month": None, "last_year": None}
 
-    #restore last clicked state
+    #restore last clicked state-----------------------
     latest_month = app_state.get("last_month")
     latest_year = app_state.get("last_year")
 
-    #override activeData - filtering year and month from hover and click
+    #override activeData - filtering year and month from hover and click-----------------------
     activeData = clickData or hoverData
     if activeData:
         clicked_year = activeData['points'][0]['customdata'][0] if 'customdata' in activeData['points'][0] else None
@@ -413,7 +420,7 @@ def update_treemap(clickData, hoverData, transaction_type, year, month, account,
         year_filter = df['Year'].unique() if 'all' in year else year
         month_filter = df['MonthName'].unique() if 'all' in month else month
         
-    #filtering account
+    #filtering account-----------------------
     if 'saras-only' in account:
         account = [ac for ac in df['Account'].unique() if ac in ('BCA - Kado','Cash Saras','Cold Money','E-Money Saras','Jenius','Mandiri')]
     elif 'all' in account:
@@ -421,7 +428,7 @@ def update_treemap(clickData, hoverData, transaction_type, year, month, account,
     else:
         account
 
-    #filtering parent category
+    #filtering parent category-----------------------
     if 'all-exclude' in parent_category:
         parent_category = [cat for cat in df['ParentCategory'].unique() if cat != 'Saving & Investment']
     elif 'all' in parent_category:
@@ -429,7 +436,7 @@ def update_treemap(clickData, hoverData, transaction_type, year, month, account,
     else:
         parent_category
 
-    #final filter
+    #final filter-----------------------
     filtered_df = df[
         (df['TransactionType'].isin(transaction_type)) &
         (df['Year'].isin(year_filter)) &
@@ -438,11 +445,11 @@ def update_treemap(clickData, hoverData, transaction_type, year, month, account,
         (df['ParentCategory'].isin(parent_category)) 
         ]
     
-    #table aggregation
+    #table aggregation-----------------------
     df_tree1 = filtered_df.groupby(['ParentCategory'])['Amount'].sum().reset_index().sort_values(by='Amount', ascending=False)
     df_tree1["Percentage"] = df_tree1["Amount"] / df_tree1["Amount"].sum() * 100
 
-    #define tree chart
+    #define tree chart-----------------------
     fig_tree1 = px.treemap(df_tree1, path=["ParentCategory"], values="Amount", title="Breakdown of Expenses on Parent Category", hover_data={"Amount": True, "Percentage": ":.1f"},custom_data=["Amount", "Percentage"],color="ParentCategory",color_discrete_map=color_map_pc)
     fig_tree1.update_traces(texttemplate="%{label}<br>%{customdata[1]:.1f}%<br>Rp %{value}", hovertemplate="%{label}<br>%{customdata[1]:.1f}%<br>Rp %{value}")
     fig_tree1.update_layout(hovermode="x unified", 
@@ -460,6 +467,7 @@ def update_treemap(clickData, hoverData, transaction_type, year, month, account,
   
     return fig_tree1, app_state
 
+#-----------------barchart----------------------
 @app.callback(
      Output('spending-bar1','figure'),
      Input('spending-trend2','clickData'),
@@ -473,6 +481,7 @@ def update_treemap(clickData, hoverData, transaction_type, year, month, account,
     )
 
 def update_graphs2(clickData, hoverData, tree_hover, transaction_type, year, month, account, parent_category):
+    #filtering-------------------------------------- 
     year_filter = df['Year'].unique() if 'all' in year else year
     month_filter = df['MonthName'].unique() if 'all' in month else month
 
@@ -490,7 +499,7 @@ def update_graphs2(clickData, hoverData, tree_hover, transaction_type, year, mon
     else:
         parent_category
 
-    #override activeData - filtering year and month from hover and click    
+    #override activeData - filtering year and month from hover and click-----------------------    
     activeData = clickData or hoverData
     if activeData:
         clicked_year = activeData['points'][0]['customdata'][0] if 'customdata' in activeData['points'][0] else None
@@ -512,7 +521,7 @@ def update_graphs2(clickData, hoverData, tree_hover, transaction_type, year, mon
         (df['Category'].notnull())
         ]
 
-    #setting hover on treemap
+    #setting hover on treemap-----------------------
     if tree_hover and 'points' in tree_hover:
         hovered_category = tree_hover['points'][0]['label']
     else:
@@ -522,10 +531,12 @@ def update_graphs2(clickData, hoverData, tree_hover, transaction_type, year, mon
         breakdown_df = filtered_df[filtered_df['ParentCategory'] == hovered_category]
     else:
         breakdown_df = filtered_df
-    
-    df_bar1 = breakdown_df.groupby(['Category'])['Amount'].sum().reset_index()
-    df_bar1 = df_bar1.sort_values(by='Amount', ascending=False)
 
+    #tabble aggregation---------------------- 
+    df_bar1 = breakdown_df.groupby(['Category'])['Amount'].sum().reset_index()
+    df_bar1 = df_bar1.sort_values(by='Amount', ascending=False) 
+
+    #define bar chart----------------------- 
     fig_bar1 = px.bar(df_bar1
                       , x="Amount"
                       , y="Category"
@@ -554,6 +565,7 @@ def update_graphs2(clickData, hoverData, tree_hover, transaction_type, year, mon
 
     return fig_bar1
 
+#-----------------last linechart----------------------
 @app.callback(
      Output('spending-trend3','figure'),
      Input('spending-bar1','hoverData'),
@@ -565,6 +577,7 @@ def update_graphs2(clickData, hoverData, tree_hover, transaction_type, year, mon
     )
 
 def update_graphs3(hoverData, transaction_type, year, month, account, parent_category):
+    #filtering-------------------------------------- 
     year = df['Year'].unique() if 'all' in year else year
     month = df['MonthName'].unique() if 'all' in month else month
 
@@ -600,10 +613,12 @@ def update_graphs3(hoverData, transaction_type, year, month, account, parent_cat
     else:
         breakdown_df = filtered_df
 
+    #tabble aggregation---------------------- 
     df_trend3 = breakdown_df.groupby(['Year','Category'])['Amount'].sum().reset_index()
     df_trend3['Lag_Value'] = df_trend3['Amount'].shift(1)
     df_trend3['Diff'] = round(((df_trend3['Amount']/df_trend3['Lag_Value'])-1)*100,1).fillna(0)
-    
+
+    #define bar chart----------------------- 
     fig_trend3 = px.line(df_trend3
                          , x="Year"
                          , y="Amount"
