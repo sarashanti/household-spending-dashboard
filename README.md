@@ -8,12 +8,6 @@ I have a yearly household finance review with my husband. The goal is to identif
 
 ### Project Demo
 
-### User Guide
-1. Extract `.csv` data from Money Lover
-2. Run `cleaning-money-lover-data.py` 
-3. Run `visualization.py` 
-4. Click `http://127.0.0.1:8050/` to view dashboard in new tab
-
 ### Sample Cleaned Data
 | Year | Month | MonthName  | MonthYear | Date       | Account          | TransactionType | ZAP     | ParentCategory    | Category       | Note              | Amount |
 |------|-------|------------|-----------|------------|------------------|-----------------|---------|-------------------|----------------|-------------------|--------|
@@ -35,6 +29,12 @@ I created dependencies among the graphs:
 1. The treemap depends on the Monthly Breakdown line chart.
 2. The barchart depends on the treemap selection.
 3. The Year-on-Year Expenses linechart depends on the barchart selection. 
+
+### User Guide
+1. Extract `.csv` data from Money Lover
+2. Run `cleaning-money-lover-data.py` 
+3. Run `visualization.py` 
+4. Click `http://127.0.0.1:8050/` to view dashboard in new tab
 
 ### Need To Be Done
 - [ ] Create unclick/deselect feature in Monthly Breakdown linechart. Still looking for a workaround that enables the unclick feature in `clickData`
