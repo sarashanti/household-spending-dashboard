@@ -14,6 +14,16 @@ I have a yearly household finance review with my husband. The goal is to identif
 3. Run `visualization.py` 
 4. Click `http://127.0.0.1:8050/` to view dashboard in new tab
 
+### Sample Cleaned Data
+| Year | Month | MonthName  | MonthYear | Date       | Account          | TransactionType | ZAP     | ParentCategory    | Category       | Note              | Amount |
+|------|-------|------------|-----------|------------|------------------|-----------------|---------|-------------------|----------------|-------------------|--------|
+| 2022 | 2     | February   | 2022-02   | 2022-02-14 | Cash Saras       | Spending        | Living  | Food              | Restaurant     | Valentine dinner  | 120000 |
+| 2023 | 5     | May        | 2023-05   | 2023-05-08 | Jenius           | Spending        | Playing | Entertainment     | Subscription   | Spotify Premium   | 60000  |
+| 2024 | 7     | July       | 2024-07   | 2024-07-21 | E-money          | Spending        | Living  | Transportation    | Train          | Office commute    | 15000  |
+| 2025 | 1     | January    | 2025-01   | 2025-01-10 | Cash Operasional | Spending        | Living  | Bills & Utilities | Electricity    | PLN monthly bill  | 350000 |
+| 2025 | 3     | March      | 2025-03   | 2025-03-19 | Cash Operasional | Spending        | Living  | Food              | Groceries      | Rice grain        | 75000  |
+
+
 ### Highlights per Files
 
 ##### `cleaning-moneylover-data.py`
