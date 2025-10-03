@@ -17,10 +17,10 @@ I have a yearly household finance review with my husband. The goal is to identif
 
 ##### `cleaning-moneylover-data.py`
 1. The definition of one month is set from the 25th to the 24th of the next month. This is adjusted according to our payday, which falls on the 25th of every month.
-2. I assigned labels for the Parent Category since this hierarchical labeling only available in the Money Lover app but not included in the exported `.csv` data.
+2. I assigned labels for the Parent Category since this hierarchical labeling only available in the Money Lover app. It is not included in the exported `.csv` data.
 
 ##### `visualization.py`
-I created dependencies among the graphs:
+I created dependencies among these graphs:
 1. The treemap depends on the Monthly Breakdown line chart.
 2. The barchart depends on the treemap selection.
 3. The Year-on-Year Expenses linechart depends on the barchart selection. 
