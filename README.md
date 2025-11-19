@@ -33,3 +33,4 @@ I created dependencies among these graphs:
 
 ### 6. Need To Be Done
 - [ ] Create unclick/deselect feature in Monthly Breakdown linechart. Still looking for a workaround that enables the unclick feature in `clickData`
+- [ ] Automate data extraction from MoneyLover app to python script
